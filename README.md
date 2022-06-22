@@ -4,6 +4,12 @@ This repository contains a number of template repositories for building up your 
 
 The idea is that a base Starling project is generated, but it contains no ROS nodes. Then you add whatever cpp/python or message custom ros packages afterwards.
 
+## Tutorial
+
+This repository is used within the tutorial: [https://starlinguas.github.io/starling_controller_templates/](https://starlinguas.github.io/starling_controller_templates/)
+
+For more detailed explanation of usage, please go to [section 4 of the tutorial](https://starlinguas.github.io/starling_controller_templates/creating/)
+
 ## Prerequisits
 
 ### Install cookiecutter
@@ -144,3 +150,153 @@ That being said, the nodes can be run standalone for your own projects, one at a
 Once these packages have been placed within the correct directory inside the Starling project, you can simply run `make` to check that they are successfully built.
 
 ## Default Example Template Functionality
+
+### The Tutorial Task Scenario
+
+By default, the templates are used to solve the following problem.
+
+You have been asked to prototype a particular scene within a drone display!
+
+In this scene a number of drones take off and automatically fly to starting points equidistant around a circle of a given radius. They then start circling around the edge of the circle attempting to stay equidistant to their neighbours. It is determined that the vehicles have not been well tuned and can end up lagging, therefore a centralised server monitors all the vehicles and notifies them if they are lagging behind.
+
+![task](tutorial/imgs/task.png)
+
+### What is in the templates
+
+The set of node templates above should create you a project which runs the example scenario specifically developed for the purpose of this tutorial. This example has been designed to show the development of an onboard and an offboard container, as well as demonstratee communication between the two. The scenario is as follows:
+
+1. We have \(n\) drones which we would like to fly equidistant around a circle of fixed radius at a initial velocity.
+2. A central server will send each drone an id \(i<n\) to determine its start location around the circle.
+3. Once received the drones will start flying around the circle and send its current position to the server.
+4. The server collates the drones informations to determine if any of the drones are lagging or ahead of where they should be. This ideal position is sent back to each drone.
+5. The drone adjusts its velocity to try based on the error to match with the ideal.
+
+With this in mind we can quickly run through what is in each of the ros node templates.
+
+> *Note:* More detail about the actual functionality within these nodes will be in [this tutorial section](cpp_example_dev.md)
+
+### `cpp_ros2_node_onboard_template`
+
+```tree
+|-- CMakeLists.txt
+|-- include
+|   |-- controller.hpp
+|   |-- main.hpp
+|   `-- state.hpp
+|-- launch
+|   `-- template_cpp_node.launch.xml
+|-- package.xml
+`-- src
+    |-- controller.cpp
+    `-- main.cpp
+```
+
+This node runs onboard the vehicle and interfaces with MAVROS. It contains a state machine with functionality to arm, takeoff, land, loiter and takes care of safety functionality.
+
+- `CMakeLists.txt`: contains the instructions to build this rosnode. This includes specifying dependencies and extra libraries (e.g. messages such as `geometry_msgs` or external dependencies). It also specifies the name of the binary containing all of your functionality. By default this is `controller`.
+- `include` and `src`: In CPP, your code files are split into header files (specifying object definitions) and source files (specifying object functionality), these are stored here
+- `launch`: contains a ROS `launch` file. We use XML notation to describe how your rosnode gets launched, including extra parameters or other changes you want to make at runtime instead of buildtime. This is what gets run to run your rosnode
+- `package.xml`: ROS2 Metadata file specifying ros2 dependencies of your project.
+
+As a brief overview of the code files:
+
+- `main.hpp` and `main.cpp`: Contains the program entrypoint function and the core of the ros node. It contains all of the core functionality to fly a vehicle as well as the state machine. It includes the user controller specified in `controller.hpp` to be expected to run during the `execution` phase of the state machine.
+- `controller.hpp` and `controller.cpp`: For the majority of simple applications, a user should only need to provide their own version of these files. The controller contains an initialisation and loop function which a user can fill in.
+- `state.hpp`: A header only file containing the states of the state machine.
+
+### `python_ros2_node_offboard_template`
+
+```tree
+|-- package.xml
+|-- resource
+|   `-- template_python_node
+|-- setup.cfg
+|-- setup.py
+|-- template_python_node
+|   |-- __init__.py
+|   `-- main.py
+`-- test
+    |-- test_copyright.py
+    |-- test_flake8.py
+    `-- test_pep257.py
+```
+
+This node runs offboard on the central server. It is designed to run on its own with no external dependence on anything outside of the application.
+
+- `package.xml`: ROS2 Metadata file specifying ros2 dependencies of your project.
+- `resource`: A python ros package special folder, no need to touch
+- `setup.cfg`: Configuration file specifying where key resources are
+- `setup.py`: The python equivalent of `CMakeLists.txt` and contains the instructions to build this rosnode. It specifies which resources are copied over and available to the rosnode at runtime. Also specifies the name of the binary, and which function it is intended to run. By default this is `controller`
+- `<your rosnode name>` e.g. `template_python_node`: The source directory for your python files.
+- `test`: A number of testing utilities which can be run with pytest. Currently not used.
+
+As a brief overview of code files:
+
+- `main.py`: Contains a ros node which uses a timer to repeat poll the current state of vehicles on the network at given intervals. It then performs the calculation of ideal vehicle location and sends that to the vehicles.
+
+### `ros2_msgs_template`
+
+```tree
+|-- CMakeLists.txt
+|-- msg
+|   |-- NotifyVehicles.msg
+|   `-- TargetAngle.msg
+`-- package.xml
+```
+
+This node is purely for specifying and building the custom ros messages in our application. Any application which uses these messages need a compiled version of this node.
+
+- `CMakeLists.txt`: contains the instructions to build the messages. Any extra messages or services need to be added to the CMakeLists.
+- `msg`: A list of specified custom messages.
+- `package.xml`: ROS2 Metadata file specifying ros2 dependencies of your project.
+
+### Dockerfile
+
+As mentioned in the [previous tutorial](docker.md), a Dockerfile is used as a recipe to build your controller docker container.
+
+The Dockerfile in this template contains the command line instructions to build your controller.
+
+By default it will install a number of useful libraries for compatibility.
+
+> If you need any new libraries, you will have to add their installation here.
+
+It then essentially copies in all of the rosnodes specified within the project name directory and runs them through the standard ROS2 build tool named `colcon`.
+
+It also copies over the `run.sh` file which the Dockerfile will run on container startup. Therefore the `run.sh` should have the instructions for running your applications.
+
+Thankfully you do not need to run `docker build` as we have setup an automatic special build system which is wrapped up inside the `Makefile`.
+
+## Running your new project
+
+With your project now constructed, you can now re-run your container with the same `make` commands as earlier.
+
+```sh
+cd <Your Application Name> # Go into the your new Starling application directory
+make run # Will build and run the container
+```
+
+> This will build a container called `<Docker Username>/<Docker Image Name>` with tag latest e.g. `myname/starling_template:latest`
+
+This will build start the onboard controller by default, but it will start complaining that it hasn't received any state or position messages for initialisation. This is normal for now!
+
+If you want to start the offboard controller, you can add the extra option `ENV="-e OFFBOARD=true"` to the make command like so `make run ENV="-e OFFBOARD=true"`. Where it will start trying to identify the number of vehicles on the network, but of course it cannot find any!
+
+You can have a look inside both container using `make run_bash`.
+
+## Initialising Git
+
+Optionally, at this point you can start version controller on your project in order to save your progress. To initalise git and create your first commit, go to the root of your project and run:
+
+```bash
+git init
+git add -A
+git commit -m "Initial Commit"
+```
+
+If you want to push this code onto github, you can follow [this tutorial](https://www.digitalocean.com/community/tutorials/how-to-push-an-existing-project-to-github). In short, create an empty github repository of the same name in your github account, then change the remote locally:
+
+```bash
+git remote add origin <remote repository URL>
+git remote -v
+git push origin master
+```
