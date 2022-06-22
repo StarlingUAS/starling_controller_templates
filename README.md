@@ -300,3 +300,7 @@ git remote add origin <remote repository URL>
 git remote -v
 git push origin master
 ```
+
+## License
+
+This project is covered under the MIT License.
