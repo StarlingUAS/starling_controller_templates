@@ -22,7 +22,7 @@ UserController::UserController(UAVController *node) {
     this->sync_angle_sub =  this->node->create_subscription<{{cookiecutter.custom_ros2_msgs_name}}::msg::TargetAngle>(
         "sync_angle", 10,
         std::bind(&UserController::handleTargetAngle, this, std::placeholders::_1));
-    
+
     this->notify_vehicles_sub = this->node->create_subscription<{{cookiecutter.custom_ros2_msgs_name}}::msg::NotifyVehicles>(
         "notify_vehicles", 10,
         std::bind(&UserController::handleNotifyVehicles, this, std::placeholders::_1));
@@ -50,33 +50,14 @@ bool UserController::smExecute(const rclcpp::Time& stamp, const rclcpp::Duration
     // Get Time Elapsed Since State Change
     double time_elapsed_sec = time_elapsed.seconds();
 
-    // Get Current Vehicle Location and Send It To Central Server
-    auto current_pos = this->node->vehicle_local_position;
-    double current_theta = atan2(current_pos->pose.position.y - this->origin.y, current_pos->pose.position.x - this->origin.x);
-    {{cookiecutter.custom_ros2_msgs_name}}::msg::TargetAngle msg;
-    msg.vehicle_id = this->node->vehicle_id;
-    msg.time = stamp;
-    msg.theta = current_theta;
-    this->notify_angle_pub->publish(msg);
+    // Current Vehicle Location
+    geometry_msgs::msg::PoseStamped current_pos = this->node->vehicle_local_position;
 
-    // Get Angular (Theta) Velocity
-    double angular_vel = this->vehicle_velocity / circle_radius;
-
-    // Amount of theta vehicle should have moved w.r.t to start location
-    this->vehicle_setpoint_theta = fmod(this->vehicle_start_theta + time_elapsed_sec * angular_vel, 2*M_PI); 
-
-    // Convert theta to coordinate location
-    double x = this->circle_radius * cos(this->vehicle_setpoint_theta) + this->origin.x;
-    double y = this->circle_radius * sin(this->vehicle_setpoint_theta) + this->origin.y;
-    double z = this->height + this->origin.z;
-    double yaw = this->vehicle_setpoint_theta;
-
-    // Tell Vehicle to go to coordinate location
-    this->node->sendSetpointPositionCoordinate(stamp, x, y, z, yaw);
-
-    RCLCPP_INFO(this->get_logger(), "Vehicle going to (%f, %f, %f), theta: %f",
-        x, y, z, yaw
-    );
+    /*
+     *
+     * Implement Your Solution Here
+     *
+     */
 
     // State Machine never exists by giving false.
     return false;
@@ -117,4 +98,3 @@ void UserController::handleNotifyVehicles(const {{cookiecutter.custom_ros2_msgs_
 
 rclcpp::Logger UserController::get_logger() {return this->node->get_logger();}
 rclcpp::Time UserController::now() {return this->node->now();}
-
