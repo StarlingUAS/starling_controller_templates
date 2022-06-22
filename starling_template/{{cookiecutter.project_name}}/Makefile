@@ -21,12 +21,14 @@ help:
 build:
 	$(BAKE) {{cookiecutter.project_name}}
 
-local-build-push:
+local-build-setup:
 	docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
 	docker buildx create --name mybuilder
 	docker buildx use mybuilder
 	docker buildx inspect --bootstrap
-	docker buildx bake --builder mybuilder -f $(BAKE_SCRIPT) --push $(IMAGE_NAME)
+
+local-build-push:
+	docker buildx bake --builder mybuilder -f $(BAKE_SCRIPT) --push {{cookiecutter.docker_image_name}}
 
 run: build
 	docker run -it --rm --net=$(NETWORK) $(ENV) -e USE_SIMULATED_TIME=true $(RUN_ARGS) $(IMAGE_NAME)
