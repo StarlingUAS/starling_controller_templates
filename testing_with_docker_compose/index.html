@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../img/favicon.ico" rel="shortcut icon"/>
+<title>7. Local testing with Docker-Compose - Starling Tutorial</title>
+<link href="../css/theme.css" rel="stylesheet"/>
+<link href="../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "7. Local testing with Docker-Compose";
+        var mkdocs_page_input_path = "testing_with_docker_compose.md";
+        var mkdocs_page_url = null;
+      </script>
+<script defer="" src="../js/jquery-3.6.0.min.js"></script>
+<!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href=".."> Starling Tutorial
+        </a><div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<p class="caption"><span class="caption-text">Tutorial</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/">1. Getting Started </a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../ros2_uav/">2. ROS2 and UAV Control</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../docker/">3. Docker and Containerisation</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../creating/">4. Creating your own Starling project</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../simulation/">5. Simulation and the Digital Double</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../cpp_example_dev/">6. Developing the example controller with ROS2 in CPP</a>
+</li>
+<li class="toctree-l1 current"><a class="reference internal current" href="./">7. Local testing with Docker-Compose</a>
+<ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="#running-the-controller-and-the-simulator-together">7.1 Running the Controller and the Simulator Together</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#verify-your-controller">7.1.1 Verify your controller</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#connect-the-simulator">7.1.2 Connect the simulator</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#developing-with-the-simulator">7.2 Developing with the Simulator</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#next-steps">7.3 Next Steps</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../multiuav_kubernetes/">8. Multi-UAV flight with Kubernetes for container deployment</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../testing_with_kind/">9. Local Integration testing with KinD Digital Double</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../brl_flight/">10. Flying your controllers in the Flying Arena</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../next_steps/">11. Wrapping up and next steps</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="..">Starling Tutorial</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a alt="Docs" class="icon icon-home" href=".."></a> »</li>
+<li>Tutorial »</li><li>7. Local testing with Docker-Compose</li>
+<li class="wy-breadcrumbs-aside">
+<a class="icon icon-github" href="https://github.com/StarlingUAS/starling_controller_templates/edit/master/docs/testing_with_docker_compose.md"> Edit on GitHub</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<h1 id="local-testing-with-docker-compose"><span class="enumerate-headings-plugin enumerate-heading-plugin">7.</span> Local Testing with Docker Compose<a class="headerlink" href="#local-testing-with-docker-compose" title="Permanent link">¶</a></h1>
+<p>In this section we will see how to do local development and testing with the local simulation environment using docker-compose. This forms the first step of the Starling workflow. By the end of this tutorial, you should understand how to run your controller against the simulation containers.</p>
+<div class="toc">
+<ul>
+<li><a href="#local-testing-with-docker-compose">7. Local Testing with Docker Compose</a><ul>
+<li><a href="#running-the-controller-and-the-simulator-together">7.1 Running the Controller and the Simulator Together</a><ul>
+<li><a href="#verify-your-controller">7.1.1 Verify your controller</a></li>
+<li><a href="#connect-the-simulator">7.1.2 Connect the simulator</a></li>
+</ul>
+</li>
+<li><a href="#developing-with-the-simulator">7.2 Developing with the Simulator</a></li>
+<li><a href="#next-steps">7.3 Next Steps</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="running-the-controller-and-the-simulator-together"><span class="enumerate-headings-plugin enumerate-heading-plugin">7.1</span> Running the Controller and the Simulator Together<a class="headerlink" href="#running-the-controller-and-the-simulator-together" title="Permanent link">¶</a></h2>
+<p>Bringing together the previous couple of tutorials, we can run our developed controller against the simulator.</p>
+<h3 id="verify-your-controller"><span class="enumerate-headings-plugin enumerate-heading-plugin">7.1.1</span> Verify your controller<a class="headerlink" href="#verify-your-controller" title="Permanent link">¶</a></h3>
+<p>First, make sure you are in the root of your controller application. Now, let us verify that our own controller is at least compiling properly. We should get something like the following, and then stop it using <code>ctrl+c</code>:</p>
+<pre><code class="language-text">make run
+...
+---- controller base setup START ------------
+VEHICLE_NAMESPACE not set, default to launchfile defaults
+---- controller base setup END ------------
+Sourcing local install setup.bash
+VEHICLE_MAVLINK_SYSID not set, default to 1
+Running Onboard Controller
+[INFO] [launch]: All log files can be found below /root/.ros/log/2022-06-20-22-22-51-158267-9c4f7a240328-49
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [controller-1]: process started with pid [51]
+[controller-1] [INFO] [1655763771.265611400] [vehicle_1.controller]: Reset Internal Parameters and Trajectory Executor
+[controller-1] [INFO] [1655763771.265749100] [vehicle_1.controller]: Controller initialised
+[controller-1] [WARN] [1655763771.365796900] [vehicle_1.controller]: Waiting for vehicle state data
+[controller-1] [INFO] [1655763771.365888900] [vehicle_1.controller]: Initialisation Waiting on System Checks
+[controller-1] [WARN] [1655763771.465746400] [vehicle_1.controller]: Waiting for vehicle state data
+...
+</code></pre>
+<blockquote>
+<p>If you have syntax errors and the like, please go back and fix them before continuing, it will save you time in the long run!</p>
+</blockquote>
+<p>The controller is currently waiting on system checks and vehicle state data. This means that it is not receiving any data from drone ros topics. Understandable as we have not yet run the simulator and connected it up!</p>
+<h3 id="connect-the-simulator"><span class="enumerate-headings-plugin enumerate-heading-plugin">7.1.2</span> Connect the simulator<a class="headerlink" href="#connect-the-simulator" title="Permanent link">¶</a></h3>
+<p>Similar to previously, we can run the simulation stack provided for testing:</p>
+<pre><code class="language-bash">docker-compose -f deployment/docker-compose.yml up
+</code></pre>
+<p>or if you have downloaded and installed the Starling CLI from Murmuration, you could also run the following (it does the same thing under the hood):</p>
+<pre><code class="language-bash">starling deploy -f deployment/docker-compose.yml start
+# or to pull the images as well
+starling deploy -f deployment/docker-compose.yml start --pull
+</code></pre>
+<p>To access the simulator, go to <a href="http://localhost:8080/"><code>localhost:8080</code></a>, and to access the simple UI, go to <a href="http://localhost:3000/"><code>localhost:3000</code></a>.</p>
+<p>In order for the controller to connect to the simulator, we need to find out which <strong>Docker network</strong> the simulator is running on.</p>
+<p>To view the current docker networks, in a second terminal run</p>
+<pre><code class="language-text">docker network ls
+NETWORK ID     NAME                 DRIVER    SCOPE
+4c2a6932e455   bridge               bridge    local
+681c73eec26a   deployment_default   bridge    local
+1059b63b6f59   host                 host      local
+</code></pre>
+<p>We are interested in the network named <code>&lt;something&gt;_default</code> and not named bridge and host which are Docker default networks. In our case <code>deployment_default</code> is the network created by docker compose when running the simulation stack. It should also be called <code>deployment_default</code> for you (the <code>&lt;something&gt;</code> is the parent folder of the docker compose file).</p>
+<p>Then re-run (close the previously running one with CTRL+C) your controller with this new network. You can use the <code>NETWORK</code> variable from the Makefile</p>
+<pre><code class="language-text">make NETWORK=deployment_default run
+
+...
+[controller-1] [INFO] [1655765539.785786200] [vehicle_1.controller]: Initialisation Waiting on System Checks
+[controller-1] [INFO] [1655765539.816086500] [vehicle_1.controller]: Initial mavros state received
+[controller-1] [INFO] [1655765539.885724600] [vehicle_1.controller]: Initialisation Waiting on Mission Start
+[controller-1] [INFO] [1655765539.985731000] [vehicle_1.controller]: Initialisation Waiting on Mission Start
+...
+</code></pre>
+<blockquote>
+<p>You could also simply specify the <code>--net=deployment_default</code> option with normal docker run</p>
+</blockquote>
+<p>Success! It looks like the controller has received data from mavros and is currently waiting to start the mission!</p>
+<p>To advance the mission, you can try pressing the green mission start button on the web interface. The vehicle should then indicate it is trying to take off, and you should be able to see it move in the simulator interface!</p>
+<p><img alt="dc_test1_example" src="../imgs/testing_dc/starling_dc_example1.gif"/></p>
+<p>However you will notice that it gets stuck waiting for User Controller Ready. This is because it is waiting for a packet from the server with its initial location, but of course we have no server running so it never receives it!</p>
+<p>To remedy this, you can open up another terminal in order to run the server. As mentioned previously, this can be achieved by setting the environment variable <code>OFFBOARD</code> to true using the following syntax</p>
+<pre><code class="language-text">make NETWORK=deployment_default ENV="-e OFFBOARD=true" run
+</code></pre>
+<p>Repeating the previous steps to start the main controller on the network, we then get the following if we follow the instructions and press the go button every time the controller asks.</p>
+<p><img alt="dc_test_example2" src="../imgs/testing_dc/starling_dc_example2.gif"/></p>
+<p>Oh dear! It looks like this example is almost there, but starts flying off of the circle erratically. Hmm, how can I develop this container without having to stop and start everything...?</p>
+<h2 id="developing-with-the-simulator"><span class="enumerate-headings-plugin enumerate-heading-plugin">7.2</span> Developing with the Simulator<a class="headerlink" href="#developing-with-the-simulator" title="Permanent link">¶</a></h2>
+<p>You may have noticed that we started the simulator, and your controller seperately as two distinct elements. You didn't have to modify any config files to add in your own controller either. This is one of the great benefits of our system as this designed separation allows the recreation of your user application without having to restart the main simulator!</p>
+<p><img alt="testing_with_dc" src="../imgs/testing_dc/docker-compose-controller-workflow.png"/></p>
+<p>This holds as long as:</p>
+<ol>
+<li>Your application has been run on the same network as the simulator</li>
+<li>Your application is written in such a way that it can be attached to the simulator at any time</li>
+<li>Your application hasn't put the simulator in an unrecoverable state! e.g. Flipped the vehicle upside down.</li>
+</ol>
+<p>Otherwise it is quite simple to make some changes to your own application and re-run your container using <code>make ... run</code> again <strong>without having to exit the simulator</strong>.</p>
+<blockquote>
+<p><em>Note:</em> This also applies to the terminal running the offboard node! Since its reactive, you dont need restart that either. ROS will simply patch the connection when your onboard controller is restarted.</p>
+</blockquote>
+<p>And now finding the bug in my <code>smExecute</code> function, my controller now does what I expect it to do - fly in a circle!</p>
+<p><img alt="dc_test_8xample3" src="../imgs/testing_dc/starling_dc_example3.gif"/></p>
+<h2 id="next-steps"><span class="enumerate-headings-plugin enumerate-heading-plugin">7.3</span> Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">¶</a></h2>
+<p><strong>Congrats!</strong> 🥳 You hopefully now have a working and tested Starling application. With luck, you now also have a better understanding of how to use Starling and its containers to quickly develop and prototype your controllers.</p>
+<p>However, we still have one part of the brief to go - the customer wanted a multi-drone application! In the next few tutorials we will take you through how to build, develop and test your application in a multi-drone setup which will take you closer to flying real drones at the BRL.</p>
+</div>
+</div><footer>
+<div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
+<a class="btn btn-neutral float-left" href="../cpp_example_dev/" title="6. Developing the example controller with ROS2 in CPP"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+<a class="btn btn-neutral float-right" href="../multiuav_kubernetes/" title="8. Multi-UAV flight with Kubernetes for container deployment">Next <span class="icon icon-circle-arrow-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+<p>Copyright © 2022 University of Bristol Flight Laboratory</p>
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+<span>
+<a class="fa fa-github" href="https://github.com/StarlingUAS/starling_controller_templates/" style="color: #fcfcfc"> GitHub</a>
+</span>
+<span><a href="../cpp_example_dev/" style="color: #fcfcfc">« Previous</a></span>
+<span><a href="../multiuav_kubernetes/" style="color: #fcfcfc">Next »</a></span>
+</span>
+</div>
+<script>var base_url = '..';</script>
+<script defer="" src="../js/theme_extra.js"></script>
+<script defer="" src="../js/theme.js"></script>
+<script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script defer="" src="../search/main.js"></script>
+<script defer="">
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+</body>
+</html>

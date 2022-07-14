@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../img/favicon.ico" rel="shortcut icon"/>
+<title>6. Developing the example controller with ROS2 in CPP - Starling Tutorial</title>
+<link href="../css/theme.css" rel="stylesheet"/>
+<link href="../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "6. Developing the example controller with ROS2 in CPP";
+        var mkdocs_page_input_path = "cpp_example_dev.md";
+        var mkdocs_page_url = null;
+      </script>
+<script defer="" src="../js/jquery-3.6.0.min.js"></script>
+<!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href=".."> Starling Tutorial
+        </a><div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<p class="caption"><span class="caption-text">Tutorial</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/">1. Getting Started </a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../ros2_uav/">2. ROS2 and UAV Control</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../docker/">3. Docker and Containerisation</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../creating/">4. Creating your own Starling project</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../simulation/">5. Simulation and the Digital Double</a>
+</li>
+<li class="toctree-l1 current"><a class="reference internal current" href="./">6. Developing the example controller with ROS2 in CPP</a>
+<ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="#very-very-quick-intro-to-cpp">6.1 Very Very Quick Intro to CPP</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#overview-of-the-controller-template">6.2 Overview of the Controller Template</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#controller-core-functionality">6.2.1 Controller Core Functionality</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#controller-communication-with-mavros">6.2.2 Controller Communication with MAVROS</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#controller-user-implemented-functionality">6.2.3 Controller User Implemented Functionality</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#a-solution-to-the-scenario">6.3 A Solution to the Scenario</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#useful-tips-for-implementation">6.4 Useful Tips for Implementation</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#getting-the-actual-current-theta">6.4.1 Getting the actual current theta</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#creating-and-publishing-messages">6.4.2 Creating and Publishing Messages</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#angular-velocity-and-position">6.4.3 Angular Velocity and Position</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#theta-to-position">6.4.4 Theta to position</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#sending-vehicle-setpoint">6.4.5 Sending Vehicle Setpoint</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#next-steps">6.5 Next Steps</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../testing_with_docker_compose/">7. Local testing with Docker-Compose</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../multiuav_kubernetes/">8. Multi-UAV flight with Kubernetes for container deployment</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../testing_with_kind/">9. Local Integration testing with KinD Digital Double</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../brl_flight/">10. Flying your controllers in the Flying Arena</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../next_steps/">11. Wrapping up and next steps</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="..">Starling Tutorial</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a alt="Docs" class="icon icon-home" href=".."></a> »</li>
+<li>Tutorial »</li><li>6. Developing the example controller with ROS2 in CPP</li>
+<li class="wy-breadcrumbs-aside">
+<a class="icon icon-github" href="https://github.com/StarlingUAS/starling_controller_templates/edit/master/docs/cpp_example_dev.md"> Edit on GitHub</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<h1 id="developing-the-example-controller-with-ros2-in-cpp"><span class="enumerate-headings-plugin enumerate-heading-plugin">6.</span> Developing the example controller with ROS2 in CPP<a class="headerlink" href="#developing-the-example-controller-with-ros2-in-cpp" title="Permanent link">¶</a></h1>
+<p>Finally, the bit you have all been waiting for! In this tutorial, we will take you through how to develop and build the controller for the example scenario. This page is for the CPP controller in particular. By the end, you should have a controller ready for testing.</p>
+<div class="toc">
+<ul>
+<li><a href="#developing-the-example-controller-with-ros2-in-cpp">6. Developing the example controller with ROS2 in CPP</a><ul>
+<li><a href="#very-very-quick-intro-to-cpp">6.1 Very Very Quick Intro to CPP</a></li>
+<li><a href="#overview-of-the-controller-template">6.2 Overview of the Controller Template</a><ul>
+<li><a href="#controller-core-functionality">6.2.1 Controller Core Functionality</a></li>
+<li><a href="#controller-communication-with-mavros">6.2.2 Controller Communication with MAVROS</a></li>
+<li><a href="#controller-user-implemented-functionality">6.2.3 Controller User Implemented Functionality</a></li>
+</ul>
+</li>
+<li><a href="#a-solution-to-the-scenario">6.3 A Solution to the Scenario</a></li>
+<li><a href="#useful-tips-for-implementation">6.4 Useful Tips for Implementation</a><ul>
+<li><a href="#getting-the-actual-current-theta">6.4.1 Getting the actual current theta</a></li>
+<li><a href="#creating-and-publishing-messages">6.4.2 Creating and Publishing Messages</a></li>
+<li><a href="#angular-velocity-and-position">6.4.3 Angular Velocity and Position</a></li>
+<li><a href="#theta-to-position">6.4.4 Theta to position</a></li>
+<li><a href="#sending-vehicle-setpoint">6.4.5 Sending Vehicle Setpoint</a></li>
+</ul>
+</li>
+<li><a href="#next-steps">6.5 Next Steps</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="very-very-quick-intro-to-cpp"><span class="enumerate-headings-plugin enumerate-heading-plugin">6.1</span> Very Very Quick Intro to CPP<a class="headerlink" href="#very-very-quick-intro-to-cpp" title="Permanent link">¶</a></h2>
+<p>By the time of the launch of this tutorial, we may not have an equivalent tutorial in Python. Therefore we provide a very very very quick intro to the bits of CPP you need to know about for this tutorial. We recommend you check out online tutorials on CPP for a much more complete introduction! So in no particular order:</p>
+<p>CPP is an Object Orientated-ish Language, so we have the idea of <em>Classes</em> which contain member variables and member functions. We also have the concept of inheritance, where a child class inherits the functionality and variables from its parent class. In ROS2, every <code>rosnode</code> class inherits from the <code>rclcpp</code> (ROS CPP Library) Node class.</p>
+<pre><code class="language-cpp">class UAVController : public rclcpp::Node
+{
+    public:
+        UAVController();
+        void reset();
+    private:
+        std::string vehicle_id = "vehicle_1";
+}
+</code></pre>
+<p>In CPP, it is standard practice to split the <em>declaration</em> of functions and variables from the <em>implementation</em> of those same functions and variables into separate files. Reasons includes space saving, verboseness and other things - look it up.</p>
+<p>Header files (files with extension <code>.h</code> / <code>.hpp</code>) contain all of the class and function declarations, like the example shown above. The syntax for a function declaration is <code>&lt;return type&gt; &lt;function_name&gt;(&lt;function arguments&gt;);</code>. The syntax to create a variable is <code>&lt;variable type&gt; variable_name;</code>, and can either be immediately assigned to or assigned later. Note that CPP is <em>typed</em>, which means that all functions and variables must specify what they intend to take as argument, return or be explictly (unlike Python).</p>
+<p>Source files (files with extension <code>.h</code> / <code>.cpp</code>) contain the implementation of the class and functions which have been declared in the assocated header file (imported with <code>#include &lt;header.hpp&gt;</code>). The following shows the implementation of the reset function in the source file, corresponding to the class in the header. Within the implementation, class variables can be used by accessing the <code>this</code> variable. Note that instead of a <code>.</code>, an arrow <code>-&gt;</code> is used. An arrow is needed to access anything which is of a pointer type <code>sth_ptr</code> (the <code>this</code> variable is a pointer to itself). This should be enough for now - read up for much more detail).</p>
+<pre><code class="language-cpp">void UAVController::reset(){
+    // ... some implementation
+    this-&gt;vehicle_id = "default_vehicle_name";
+}
+</code></pre>
+<p>As with most languages, CPP has the standard control flow operations - <code>if</code>, <code>for</code>, <code>while</code>, <code>continue</code>, <code>return</code>, etc that you would see in most other languages. Hopefully you can infer how these and the various other CPP elements work from reading the code! Good luck! :D</p>
+<h2 id="overview-of-the-controller-template"><span class="enumerate-headings-plugin enumerate-heading-plugin">6.2</span> Overview of the Controller Template<a class="headerlink" href="#overview-of-the-controller-template" title="Permanent link">¶</a></h2>
+<blockquote>
+<p><strong><em>Important:</em></strong>  Have the code open in your editor of choice and follow along with the explanation.</p>
+</blockquote>
+<p>Let's start by examining the CPP onboard controller in more detail. As shown in the <a href="../creating/">creating a starling project tutorial</a>, the CPP onboard controller has the following structure:</p>
+<pre><code class="language-tree">|-- CMakeLists.txt
+|-- include
+|   |-- controller.hpp
+|   |-- main.hpp
+|   `-- state.hpp
+|-- launch
+|   `-- template_cpp_node.launch.xml
+|-- package.xml
+`-- src
+    |-- controller.cpp
+    `-- main.cpp
+</code></pre>
+<p>We gave an overview there, but we didn't provide any details on what exactly the CPP files are doing! So we now go into more detail.</p>
+<h3 id="controller-core-functionality"><span class="enumerate-headings-plugin enumerate-heading-plugin">6.2.1</span> Controller Core Functionality<a class="headerlink" href="#controller-core-functionality" title="Permanent link">¶</a></h3>
+<p>In addition to performing the application, this controller must take care of a number of normal functions before and after executing the actions of the application. This includes the following actions:</p>
+<ul>
+<li>Ensuring and checking that the vehicle is receiving telemetry</li>
+<li>Arming and Disarming the Vehicle before and after flight</li>
+<li>Taking off from the ground and Landing safely</li>
+<li>Going to the start location of the given task</li>
+<li>Taking instruction (such as go, abort and estop) and safely reacting to them from users</li>
+</ul>
+<p>The order and usage of these actions are fairly consistent over a large number of possible applications, so this controller bundles them up as standard functionality available in the main execution of the node.</p>
+<p>The <code>main.hpp</code> and <code>main.cpp</code> files define a <code>UAVController</code> rosnode class. In this class, after initialisation, a timer is used to run a main operating loop function over and over at a fixed interval (10hz by default). Our controller makes use of a <em>finite state machine</em> model to manage the control flow through the various states mentioned above. This FSM is shown in the diagram below.</p>
+<p><img alt="fsm" src="../imgs/dev/statemachine.png"/></p>
+<p>The Rectangular boxes (apart from the red ones) all depict States of this FSM. Each state requires a number of orange actions to complete or checks to pass before it can move onto the next state. The green states also include live checks for if the vehicle is armed and in the correct mode for offboard flight, as the vehicle will be in the air. The FSM also contains failure states for any of the checks in which the vehicle which go to Stop, and therefore immediately land.</p>
+<p>The functionality of this state machine is encoded within the <code>stateMachine(Time stamp)</code> function, and is triggered by a Ros Timer running at 10hz (<code>this-&gt;execution_timer</code>). The States are defined in <code>state.hpp</code>.</p>
+<p>From an implementation standpoint, since the state machine has to run continuously, any called function cannot internally loop indefinitely and must execute and immediately exit. Traditionally FSMs switch states through the use of a large set of binary variables. In this particular application, this felt very verbose, and so we use boolean returning execution functions as our state machine checks.</p>
+<p>For example, the Takeoff check calls to see whether <code>this-&gt;smTakeoffVehicle(stamp)</code> (main.cpp:246) returns true.</p>
+<pre><code class="language-cpp">case State::TAKEOFF:
+    this-&gt;smOffboardArmed(stamp);
+    if(!this-&gt;smTakeoffVehicle(stamp)) {
+        RCLCPP_INFO(this-&gt;get_logger(), "Waiting for Takeoff");
+    }
+</code></pre>
+<p>However, if we look at this function, it itself performs the takeoff procedure to a given height, always returning false, unless the vehicle is at its takeoff location.</p>
+<h3 id="controller-communication-with-mavros"><span class="enumerate-headings-plugin enumerate-heading-plugin">6.2.2</span> Controller Communication with MAVROS<a class="headerlink" href="#controller-communication-with-mavros" title="Permanent link">¶</a></h3>
+<p>Now we have the controller architecture in play, how does this controller actually talk to the vehicle? At the bottom of <code>main.hpp</code> you should see a whole bunch of Ros Publishers and Subscribers being declared (note how they are pointers). These pubs and subs are initialised within the class constructor/initialiser in <code>main.cpp:67-97</code>.</p>
+<p>In order to detect arming and mode, we subscribe to <code>mavros/state</code>, and in order to get the local cartesian position and orientation of the vehicle, we also get <code>mavros/local_position/pose</code>. These both give us a constant stream of data which we save into variables <code>this-&gt;vehicle_state</code> and <code>this-&gt;vehicle_local_position</code>.</p>
+<p>In order to send position commands to the vehicle, we set up a publisher to <code>mavros/setpoint_position/local</code> and use the <code>sendSetpointPositionPose(stamp, geometry_msgs::msg::PoseStamped)</code> function to publish setpoints to the autopilot. The translated MAVLINK commands then tell the drone to go to that location and orientation immediately.</p>
+<p>Therefore in a number of places, we make use of interpolators to ensure that the vehicle can move from its location to any other at safe velocities and rates. Otherwise, the drone will ramp up to maximum velocity to go to far away locations which can be quite dangerous! Hence the <a href="https://github.com/CD3/libInterpolate">CD3 interpolate library</a> is included by default.</p>
+<h3 id="controller-user-implemented-functionality"><span class="enumerate-headings-plugin enumerate-heading-plugin">6.2.3</span> Controller User Implemented Functionality<a class="headerlink" href="#controller-user-implemented-functionality" title="Permanent link">¶</a></h3>
+<p>In creating this template, it was our intention to make the user developer experience as pleasant as possible. As mentioned, we found that different applications only differed in use case, and still shared the majority of drone functionality. In our state machine then, this corresponds to only executing application based at initialisation and during the execute state.</p>
+<p>We therefore decided to abstract this out into its own class of <code>UserController</code> within <code>trajectory.hpp</code> and <code>trajectory.cpp</code>.</p>
+<pre><code class="language-cpp">class UserController
+{
+    public:
+        UserController(UAVController *node);
+
+        // Reset this controller
+        void reset();
+
+        // User Controller Checking If The Start Location is Registered
+        bool smReady(const rclcpp::Time&amp; stamp);
+
+        // User Controller Execute One Control Loop
+        bool smExecute(const rclcpp::Time&amp; stamp, const rclcpp::Duration&amp; time_elapsed);
+
+    private:
+        // ROS Helper Functions
+        rclcpp::Logger get_logger();
+        rclcpp::Time now();
+
+        // The ROSnode itself
+        UAVController* node;
+
+        // User variables
+        ...
+}
+</code></pre>
+<p>The <code>UserController</code> only has 3 functions of <code>reset()</code>, <code>smReady(stamp)</code> and <code>smExecute(stamp, time_elapsed)</code> which correspond with the parts of the State Machine which are important to the user. The other important variable is the <code>node</code>. This class is <em>not</em> a node in itself (a node cannot run another node). This variable is used for storing the main <code>UAVController</code> node, which is passed in during initialisation. It enables us to call useful functions later.</p>
+<p>So how does <code>UserController</code> fit into the main node? <code>UserController</code> is actually declared in <code>main.hpp:99</code> and initialised in <code>main.cpp:100</code>. Doing a <code>ctrl+f</code> and searching for <code>this-&gt;user_controller</code> you can see the places where it gets called, and they are as described above.</p>
+<p>So then, where does the user code go?! The code you write for your own applications goes in two places:</p>
+<ol>
+<li>New functions and variables to do with your code are declared below the <code>node</code> variable in <code>controller.hpp</code></li>
+<li>Implementations of these functions, as well as your implementations of <code>reset()</code>, <code>smReady(stamp)</code> and <code>smExecute(stamp, time_elapsed)</code> should be provided in the gaps available in <code>controller.cpp</code>.</li>
+</ol>
+<p>Usefully for this example, we have already provided 80% of the implementation, including publishers and subscribers and the implmentation of all the core functions except <code>smExecute(stamp, time_elapsed)</code> which will be discussed below and left as an exercise for the reader.</p>
+<blockquote>
+<p>After the next section, have a read through <code>controller.hpp</code> and <code>controller.cpp</code> and try and follow the logic to see if it makes sense.</p>
+</blockquote>
+<h2 id="a-solution-to-the-scenario"><span class="enumerate-headings-plugin enumerate-heading-plugin">6.3</span> A Solution to the Scenario<a class="headerlink" href="#a-solution-to-the-scenario" title="Permanent link">¶</a></h2>
+<p>You have been asked to prototype a particular scene within a drone display!</p>
+<p>In this scene a number of drones take off and automatically fly to starting points equidistant around a circle of a given radius. They then start circling around the edge of the circle attempting to stay equidistant to their neighbours. It is determined that the vehicles have not been well tuned and can end up lagging, so there exists a centralised server to monitor the vehicles and notify them if they are lagging behind.</p>
+<p><img alt="task" src="../imgs/task.png"/></p>
+<p>For the purpose of this tutorial, we have created this particular method of solving the problem, though other ways definitely exist! Unless you are confident in your ability, we ask that you follow along for now :)</p>
+<p>We take the approach of characterising a vehicle's position solely based on its angle theta, with the following steps:</p>
+<ol>
+<li>Server sends how many drones are on the network every few seconds and labels drones from 0+ (Uses <code>NotifyVehicles</code> msg)</li>
+<li>Drones use id to work out starting location around the circle</li>
+<li>Wait for GO to Takeoff</li>
+<li>Wait for valid start location and GO to move to start locations</li>
+<li>Wait for GO to continue</li>
+<li>Vehicle flies around in a circle</li>
+<li>During flight, vehicle sends its own theta every second to server (Uses <code>TargetAngle</code> msg)</li>
+<li>Server responds with angle it should be at right now with respect to other vehicles (Uses <code>TargetAngle</code> msg)</li>
+<li>A simple brute force algorithm is to imagine each vehicle was correct and calculate ideal locations of all other vehicles.</li>
+<li>Then return the average of each ideal location for each drone.</li>
+<li>Drones then proportionally change velocity based on angle disparity.</li>
+</ol>
+<p><strong>Luckily for you all, the tutorial already implements all of these functions apart from part 5 and 6 which you will need to implement.
+</strong></p>
+<p>Within <code>controller.cpp</code> your goal is to fill in steps 5 and 6 into the <code>smExecute</code> function.</p>
+<pre><code class="language-cpp">bool UserController::smExecute(const rclcpp::Time&amp; stamp, const rclcpp::Duration&amp; time_elapsed) {
+    // Get Time Elapsed Since State Change
+    double time_elapsed_sec = time_elapsed.seconds();
+
+    // Current Vehicle Location
+    geometry_msgs::msg::PoseStamped current_pos = this-&gt;node-&gt;vehicle_local_position;
+
+    /*
+     *
+     * Implement Your Solution Here
+     *
+     */
+
+    // State Machine never exists by giving false.
+    return false;
+}
+</code></pre>
+<p>As you're developing, dont forget to run <code>make</code> often to compile and build your code! This will help you catch syntax errors and other bugs as your go. You may also want to try out some of the local testing instructions in <a href="../testing_with_docker_compose/">the next tutorial</a> and come back and implement other bits.</p>
+<h2 id="useful-tips-for-implementation"><span class="enumerate-headings-plugin enumerate-heading-plugin">6.4</span> Useful Tips for Implementation<a class="headerlink" href="#useful-tips-for-implementation" title="Permanent link">¶</a></h2>
+<p>We provide some guidelines and tips here for implementing the solution. Remember to have a look through the available variables as they can come in useful. You can access these variables using the <code>this-&gt;(myvariable)</code> functions.</p>
+<h3 id="getting-the-actual-current-theta"><span class="enumerate-headings-plugin enumerate-heading-plugin">6.4.1</span> Getting the actual current theta<a class="headerlink" href="#getting-the-actual-current-theta" title="Permanent link">¶</a></h3>
+<p>The algorithm requires sending the vehicle's actual theta to the server for processing. The actual theta of the vehicle has to be calculated from the x,y location of the vehicle with respect to the origin location of the vehicle.</p>
+<blockquote>
+<p><em>Note:</em> many mathematics functions such as <code>atan2(x,y)</code>, <code>sin(x)</code>, <code>cos(x)</code> are available as is in these formats.</p>
+</blockquote>
+<details>
+<summary>View spoilers and code</summary>
+<pre><code class="language-cpp">double current_theta = atan2(current_pos-&gt;pose.position.y - this-&gt;origin.y, current_pos-&gt;pose.position.x - this-&gt;origin.x);
+</code></pre>
+</details>
+<h3 id="creating-and-publishing-messages"><span class="enumerate-headings-plugin enumerate-heading-plugin">6.4.2</span> Creating and Publishing Messages<a class="headerlink" href="#creating-and-publishing-messages" title="Permanent link">¶</a></h3>
+<p>The server uses the <code>TargetAngle</code> and <code>NotifyVehicle</code> messages to communicate with the vehicle. The vehicle then sends <code>TargetAngle</code> messages back to the server at each execution step. Have a look at the <code>TargetAngle</code> msg inside your custom <code>msgs</code> folder. You can create a message in cpp using the following syntax:</p>
+<pre><code class="language-cpp">target_msgs::msg::TargetAngle msg;
+msg.vehicle_id = this-&gt;node-&gt;vehicle_id;
+...
+</code></pre>
+<p>The msg fields can be filled in by using the <code>msg.&lt;field&gt; = &lt;value&gt;</code> notation. Once you have created the correct message for a particular publisher, you can publish the message using:</p>
+<pre><code class="language-cpp">this-&gt;my_publisher-&gt;publish(msg);
+</code></pre>
+<p>Make sure to check which publisher you should be publishing with.</p>
+<details>
+<summary>View spoilers and code</summary>
+<pre><code class="language-cpp">target_msgs::msg::TargetAngle msg;
+msg.vehicle_id = this-&gt;node-&gt;vehicle_id;
+msg.time = stamp;
+msg.theta = current_theta;
+this-&gt;notify_angle_pub-&gt;publish(msg);
+</code></pre>
+</details>
+<h3 id="angular-velocity-and-position"><span class="enumerate-headings-plugin enumerate-heading-plugin">6.4.3</span> Angular Velocity and Position<a class="headerlink" href="#angular-velocity-and-position" title="Permanent link">¶</a></h3>
+<p>Now we've sent the actual theta information to the server, we should now calculate where the vehicle should go. We are doing this based on the time that has been elapsed and the vehicle velocity to calculate a setpoint based on where the vehicle <em>should</em> be right now.</p>
+<p>You will first need to calculate the angular velocity to see what angle the vehicle should be currently at.</p>
+<p>You can then find the actual theta by calculating the number of radians travelled, in addition to the start location of the vehicle. You should set the calculated theta to the <code>this-&gt;vehicle_setpoint_theta</code> member variable.</p>
+<blockquote>
+<p><em>Note:</em> You can use the <code>fmod</code> function to do a floating point modulo operation.</p>
+</blockquote>
+<details>
+<summary>View spoilers and code</summary>
+<pre><code class="language-cpp">// Get Angular (Theta) Velocity
+double angular_vel = this-&gt;vehicle_velocity / circle_radius;
+
+// Amount of theta vehicle should have moved w.r.t start location
+this-&gt;vehicle_setpoint_theta = fmod(this-&gt;vehicle_start_theta + time_elapsed_sec * angular_vel, 2*M_PI);
+</code></pre>
+</details>
+<h3 id="theta-to-position"><span class="enumerate-headings-plugin enumerate-heading-plugin">6.4.4</span> Theta to position<a class="headerlink" href="#theta-to-position" title="Permanent link">¶</a></h3>
+<p>Now you have calculated the setpoint theta, we now need to work out the cartesian (x,y,z) coordinate for the drone to fly to using its internal position control.</p>
+<p>This can be calculated using trigonometry:
+<div><span class="MathJax_Preview">$$ x = r \times cos(\theta) \qquad y = r \times sin(\theta)$$</span><script type="math/tex; mode=display"> x = r \times cos(\theta) \qquad y = r \times sin(\theta)</script>
+</div>
+</p>
+<p>But don't forget about <span><span class="MathJax_Preview">\(z\)</span><script type="math/tex">z</script></span> and yaw too!</p>
+<details>
+<summary>View spoilers and code</summary>
+<pre><code class="language-cpp">// Convert theta to coordinate location
+double x = this-&gt;circle_radius * cos(this-&gt;vehicle_setpoint_theta) + this-&gt;origin.x;
+double y = this-&gt;circle_radius * sin(this-&gt;vehicle_setpoint_theta) + this-&gt;origin.y;
+double z = this-&gt;height + this-&gt;origin.z;
+double yaw = this-&gt;vehicle_setpoint_theta;
+</code></pre>
+</details>
+<h3 id="sending-vehicle-setpoint"><span class="enumerate-headings-plugin enumerate-heading-plugin">6.4.5</span> Sending Vehicle Setpoint<a class="headerlink" href="#sending-vehicle-setpoint" title="Permanent link">¶</a></h3>
+<p>Finally, having calculated the position the vehicle should visit, you can send off the Setpoint position for the vehicle to execute using the node's built in function.</p>
+<pre><code class="language-cpp">// Tell Vehicle to go to coordinate location
+this-&gt;node-&gt;sendSetpointPositionCoordinate(stamp, x, y, z, yaw);
+
+// Log this using the following function
+RCLCPP_INFO(this-&gt;get_logger(), "Vehicle going to (%f, %f, %f), theta: %f",
+    x, y, z, yaw
+</code></pre>
+<h2 id="next-steps"><span class="enumerate-headings-plugin enumerate-heading-plugin">6.5</span> Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">¶</a></h2>
+<p>Congrats! You have hopefully either begun or completed the implementation of a controller which solves the example problem. You should now have a decent understanding of how the core UAV rosnode controller template is constructed.</p>
+<blockquote>
+<p>Have a look at the implementation for the <em>offboard</em> controller and see if you can match its functionality with the algorithm steps shown above. See if you can identify how it connects with the controller you have just written.</p>
+</blockquote>
+<p>However, we now need to check its functionality - is it actually working or doing what we expect? We will cover how to perform local development and testing in the next chapter.</p>
+</div>
+</div><footer>
+<div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
+<a class="btn btn-neutral float-left" href="../simulation/" title="5. Simulation and the Digital Double"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+<a class="btn btn-neutral float-right" href="../testing_with_docker_compose/" title="7. Local testing with Docker-Compose">Next <span class="icon icon-circle-arrow-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+<p>Copyright © 2022 University of Bristol Flight Laboratory</p>
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+<span>
+<a class="fa fa-github" href="https://github.com/StarlingUAS/starling_controller_templates/" style="color: #fcfcfc"> GitHub</a>
+</span>
+<span><a href="../simulation/" style="color: #fcfcfc">« Previous</a></span>
+<span><a href="../testing_with_docker_compose/" style="color: #fcfcfc">Next »</a></span>
+</span>
+</div>
+<script>var base_url = '..';</script>
+<script defer="" src="../js/theme_extra.js"></script>
+<script defer="" src="../js/theme.js"></script>
+<script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script defer="" src="../search/main.js"></script>
+<script defer="">
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+</body>
+</html>

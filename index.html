@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="Starling Tutorial" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>Starling Tutorial</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Starling Tutorial";
+        var mkdocs_page_input_path = "README.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="." class="icon icon-home"> Starling Tutorial
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption"><span class="caption-text">Tutorial</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="getting_started/">1. Getting Started </a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="ros2_uav/">2. ROS2 and UAV Control</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="docker/">3. Docker and Containerisation</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="creating/">4. Creating your own Starling project</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="simulation/">5. Simulation and the Digital Double</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="cpp_example_dev/">6. Developing the example controller with ROS2 in CPP</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="testing_with_docker_compose/">7. Local testing with Docker-Compose</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="multiuav_kubernetes/">8. Multi-UAV flight with Kubernetes for container deployment</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="testing_with_kind/">9. Local Integration testing with KinD Digital Double</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="brl_flight/">10. Flying your controllers in the Flying Arena</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="next_steps/">11. Wrapping up and next steps</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href=".">Starling Tutorial</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="." class="icon icon-home" alt="Docs"></a> &raquo;</li><li>Starling Tutorial</li>
+    <li class="wy-breadcrumbs-aside">
+        <a href="https://github.com/StarlingUAS/starling_controller_templates/edit/master/docs/README.md"
+          class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="starling-tutorial">Starling Tutorial<a class="headerlink" href="#starling-tutorial" title="Permanent link">&para;</a></h1>
+<div class="toc">
+<ul>
+<li><a href="#starling-tutorial">Starling Tutorial</a><ul>
+<li><a href="#introduction">Introduction</a><ul>
+<li><a href="#what-is-starling">What is Starling</a></li>
+<li><a href="#what-will-i-learn-in-this-tutorial">What Will I learn In This Tutorial</a></li>
+<li><a href="#the-tutorial-task-scenario">The Tutorial Task Scenario</a></li>
+</ul>
+</li>
+<li><a href="#how-to-use-this-tutorial">How To Use This Tutorial</a></li>
+<li><a href="#contents">Contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="introduction">Introduction<a class="headerlink" href="#introduction" title="Permanent link">&para;</a></h2>
+<h3 id="what-is-starling">What is Starling<a class="headerlink" href="#what-is-starling" title="Permanent link">&para;</a></h3>
+<p>Starling is an end to end, modular, containerised UAV infrastucture  designed to facilitate the local development, testing and deployment of Single and Multi-UAV systems from simulation to the Bristol Robotics Lab Flight Arena (and hopefully beyond). It will hopefully allow for a more approachable development workflow to enable more researchers to fly UAVs in a safe, reproducable and controllable manner.</p>
+<p><img alt="simplearch" src="imgs/SimpleArch.png" /></p>
+<p>This tutorial is intended to demonstrate how to use Starling to develop and deploy a multi-uav controller.</p>
+<h3 id="what-will-i-learn-in-this-tutorial">What Will I learn In This Tutorial<a class="headerlink" href="#what-will-i-learn-in-this-tutorial" title="Permanent link">&para;</a></h3>
+<p>This tutorial aims to bring you from the basics of software development, to starting your own Starling project, to local testing, to flying your developed controller in the real world.</p>
+<p>Through the development of a multi-UAV controller, you will be taught the fundamentals of Starling, and how to use it. This will include learning about UAV Control and ROS2, why we decided to use Docker and Containerisation, and the use of Kubernetes and Container Orchestration for testing. We will be providing both background discussion as well as hands on example to run.</p>
+<p>In particular, we follow the Starling development workflow we designed for the development, testing and validation of Starling controllers.</p>
+<p><img alt="workflow" src="imgs/workflow.png" /></p>
+<h3 id="the-tutorial-task-scenario">The Tutorial Task Scenario<a class="headerlink" href="#the-tutorial-task-scenario" title="Permanent link">&para;</a></h3>
+<p>You have been asked to prototype a particular scene within a drone display!</p>
+<p>In this scene a number of drones take off and automatically fly to starting points equidistant around a circle of a given radius. They then start circling around the edge of the circle attempting to stay equidistant to their neighbours. It is determined that the vehicles have not been well tuned and can end up lagging, therefore a centralised server monitors all the vehicles and notifies them if they are lagging behind.</p>
+<p><img alt="task" src="imgs/task.png" /></p>
+<h2 id="how-to-use-this-tutorial">How To Use This Tutorial<a class="headerlink" href="#how-to-use-this-tutorial" title="Permanent link">&para;</a></h2>
+<p>This tutorial is split into a set of sequential sections. Each section builds upon the tools and knowledge from previous tutorials, so it is recommended you follow them in sequence.</p>
+<p>The tutorials themselves are mostly split between teaching theory, and then applying that theory through running some exercises or commands.</p>
+<p>It is important that throughout this tutorial, you consider why you are being asked to run a command with those particular arguments. Don't just copy and paste verbatim!</p>
+<p>As mentioned you will be developing a starling application alongside this tutorial. There are some parts where it will be beneficial for you to have the code open side by side.</p>
+<h2 id="contents">Contents<a class="headerlink" href="#contents" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p><a href="getting_started/">Getting started</a></p>
+<ul>
+<li>Learn Starling dependencies and how to install them</li>
+</ul>
+</li>
+<li>
+<p><a href="ros2_uav/">ROS2 and UAV Control</a></p>
+<ul>
+<li>Learn how UAVs are controlled</li>
+<li>Learn the theory behind the Robot Operating System</li>
+</ul>
+</li>
+<li>
+<p><a href="docker/">Docker and Containersiation</a></p>
+<ul>
+<li>Learn what containerisation is and how its used within Starling</li>
+<li>Learn basic Docker commands to run Starling containers</li>
+</ul>
+</li>
+<li>
+<p><a href="creating/">Creating your own Starling project</a></p>
+<ul>
+<li>Learning how to use a template to create your own Starling project</li>
+</ul>
+</li>
+<li>
+<p><a href="simulation/">Simulation and the Digital Double</a></p>
+<ul>
+<li>Learn about how UAVs are simulated</li>
+<li>Learn how to run the BRL digital double simulator</li>
+</ul>
+</li>
+<li>
+<p><a href="cpp_example_dev/">Developing the example controller with ROS2 in CPP</a></p>
+<ul>
+<li><em>Exercise:</em> Building a solution to the example scenario</li>
+</ul>
+</li>
+<li>
+<p><a href="testing_with_docker_compose/">Local testing with Docker-Compose</a></p>
+<ul>
+<li>Learn how to develop and test your controller against the simulator</li>
+</ul>
+</li>
+<li>
+<p><a href="multiuav_kubernetes/">Multi-UAV flight with Kubernetes for container deployment</a></p>
+<ul>
+<li>Learn about why Starling uses Kubernetes for Integration testing</li>
+<li>Learn how to run the integration testing stack</li>
+</ul>
+</li>
+<li>
+<p><a href="testing_with_kind/">Local Integration testing with KinD Digital Double</a></p>
+<ul>
+<li>Learn how to deploy your application for integration testing</li>
+</ul>
+</li>
+<li>
+<p><a href="brl_flight/">Flying your controllers in the Flying Arena</a></p>
+<ul>
+<li>Learn about the BRL flight arena systems</li>
+<li>Learn about how to develop and deploy your controller to real vehicles safely</li>
+</ul>
+</li>
+<li>
+<p><a href="next_steps/">Wrapping up and next steps</a></p>
+<ul>
+<li>Providing useful links and next steps after completing the tutorial</li>
+</ul>
+</li>
+</ol>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>Copyright &copy; 2022 University of Bristol Flight Laboratory</p>
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/StarlingUAS/starling_controller_templates/" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script>var base_url = '.';</script>
+    <script src="js/theme_extra.js" defer></script>
+    <script src="js/theme.js" defer></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" defer></script>
+      <script src="search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 1.3.0
+Build Date UTC : 2022-07-14 20:30:29.514962+00:00
+-->

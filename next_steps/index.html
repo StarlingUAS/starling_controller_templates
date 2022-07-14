@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../img/favicon.ico" rel="shortcut icon"/>
+<title>11. Wrapping up and next steps - Starling Tutorial</title>
+<link href="../css/theme.css" rel="stylesheet"/>
+<link href="../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "11. Wrapping up and next steps";
+        var mkdocs_page_input_path = "next_steps.md";
+        var mkdocs_page_url = null;
+      </script>
+<script defer="" src="../js/jquery-3.6.0.min.js"></script>
+<!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href=".."> Starling Tutorial
+        </a><div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<p class="caption"><span class="caption-text">Tutorial</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/">1. Getting Started </a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../ros2_uav/">2. ROS2 and UAV Control</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../docker/">3. Docker and Containerisation</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../creating/">4. Creating your own Starling project</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../simulation/">5. Simulation and the Digital Double</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../cpp_example_dev/">6. Developing the example controller with ROS2 in CPP</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../testing_with_docker_compose/">7. Local testing with Docker-Compose</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../multiuav_kubernetes/">8. Multi-UAV flight with Kubernetes for container deployment</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../testing_with_kind/">9. Local Integration testing with KinD Digital Double</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../brl_flight/">10. Flying your controllers in the Flying Arena</a>
+</li>
+<li class="toctree-l1 current"><a class="reference internal current" href="./">11. Wrapping up and next steps</a>
+<ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="#wrapping-up-the-tutorial">11.1 Wrapping up the Tutorial</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#what-next">11.2 What Next</a>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="..">Starling Tutorial</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a alt="Docs" class="icon icon-home" href=".."></a> »</li>
+<li>Tutorial »</li><li>11. Wrapping up and next steps</li>
+<li class="wy-breadcrumbs-aside">
+<a class="icon icon-github" href="https://github.com/StarlingUAS/starling_controller_templates/edit/master/docs/next_steps.md"> Edit on GitHub</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<h1 id="wrapping-up-and-next-steps"><span class="enumerate-headings-plugin enumerate-heading-plugin">11.</span> Wrapping up and next steps<a class="headerlink" href="#wrapping-up-and-next-steps" title="Permanent link">¶</a></h1>
+<div class="toc">
+<ul>
+<li><a href="#wrapping-up-and-next-steps">11. Wrapping up and next steps</a><ul>
+<li><a href="#wrapping-up-the-tutorial">11.1 Wrapping up the Tutorial</a></li>
+<li><a href="#what-next">11.2 What Next</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="wrapping-up-the-tutorial"><span class="enumerate-headings-plugin enumerate-heading-plugin">11.1</span> Wrapping up the Tutorial<a class="headerlink" href="#wrapping-up-the-tutorial" title="Permanent link">¶</a></h2>
+<p>Congratulations on making it to the end of this intense tutorial! 🥳🥳🎉🎉🎉</p>
+<p><img alt="cat" src="../imgs/wrapup/kitten-cat.gif"/></p>
+<p>Through the Starling development workflow, you have sucessfully created your own Starling project and validated against local testing, our integration testing stack and on real vehicles.</p>
+<p>In the process, you have hopefully learnt about the basics of UAV Control and ROS2. Why we decided to use docker and containerisation. And finally why we extended to using Kubernetes and container orchestration for software deployment to the real world.</p>
+<h2 id="what-next"><span class="enumerate-headings-plugin enumerate-heading-plugin">11.2</span> What Next<a class="headerlink" href="#what-next" title="Permanent link">¶</a></h2>
+<p>Now it's time for you to go do something awesome with your Starling projects! The cookiecutter templates are publically available and should cover most use cases - whether you are doing low level control testing or higher level planning.</p>
+<p>Feel free to continue playing around with the example application from this tutorial. The solution we devise is only one of an infinite number of possible solutions. In particular, I feel you could apply some sort of optimisation procedure for the server's method of finding optimal thetas for each vehicle. I would love to see what sort of improvements you all come up with!</p>
+<p>Finally, we share some more links for useful places to go to and other useful links. We could only cover so much in this tutorial (I know right...) and there are many nuances and details about all the tools and setups throughout all of Starling.</p>
+<ul>
+<li>For specific information, please visit our docs at <a href="https://docs.starlinguas.dev/">https://docs.starlinguas.dev/</a>. There you will find more detailed information about the images and setup.</li>
+<li>There already exists an ecosystem of applications in our github repository at <a href="https://github.com/StarlingUAS">https://github.com/StarlingUAS</a>. A couple of notable projects include:<ul>
+<li><a href="https://github.com/StarlingUAS/synchronous_position_trajectory_controller">Syncrhonous position control</a> which is a multi-vehicle trajectory follower which can follow paths submitted to a web interface. A useful setup for basic multi-vehicle path following.</li>
+<li><a href="https://github.com/StarlingUAS/BRLFlightArenaGazebo">BRL Flight Arena</a> is the source for the flight arena digital double and gives examples for how to create your own gazebo worlds, as well as include custom vehicles into your Starling containers.</li>
+<li><a href="https://github.com/StarlingUAS/starling_ui_example">Example UI</a> is the source for the very basic example user interface we use throughout this tutorial. As Docker cannot really run native GUI applications, a web based interface is the next best thing!</li>
+<li>And many others!</li>
+</ul>
+</li>
+</ul>
+<p>We would love to hear about the projects you are developing! We would also love to receive contributions and Pull Requests for this project. This is a fully open source project, and in that spirit, if in using it you find issues with the core of Starling, please submit an issue or even fix it and submit a PR! We appreciate as much as help as we can get!</p>
+<p>I hope you have enjoyed going through tutorial, and have found it useful. I also hope that Starling becomes the right tool for you to do your research! If you have any questions or queries about this Tutorial or Starling, I will be more than happy to anwser them at <a href="mailto:mickey.li@bristol.ac.uk">mickey.li@bristol.ac.uk</a>.</p>
+<p><strong>Mickey Li</strong>, Bristol Robotics Laboratory, University of Bristol, University of West England</p>
+<ul>
+<li>Website: <a href="https://mickeyhl.li/">https://mickeyhl.li/</a></li>
+<li>Email: <a href="mailto:mickey.li@bristol.ac.uk">mickey.li@bristol.ac.uk</a></li>
+<li>Github: <a href="https://github.com/mhl787156">https://github.com/mhl787156</a></li>
+<li>LinkedIn: <a href="https://www.linkedin.com/in/mickeyhaolinli/">https://www.linkedin.com/in/mickeyhaolinli/</a></li>
+</ul>
+</div>
+</div><footer>
+<div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
+<a class="btn btn-neutral float-left" href="../brl_flight/" title="10. Flying your controllers in the Flying Arena"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+</div>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+<p>Copyright © 2022 University of Bristol Flight Laboratory</p>
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+<span>
+<a class="fa fa-github" href="https://github.com/StarlingUAS/starling_controller_templates/" style="color: #fcfcfc"> GitHub</a>
+</span>
+<span><a href="../brl_flight/" style="color: #fcfcfc">« Previous</a></span>
+</span>
+</div>
+<script>var base_url = '..';</script>
+<script defer="" src="../js/theme_extra.js"></script>
+<script defer="" src="../js/theme.js"></script>
+<script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script defer="" src="../search/main.js"></script>
+<script defer="">
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+</body>
+</html>

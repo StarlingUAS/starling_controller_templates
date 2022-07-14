@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+
+<html class="writer-html5" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="../img/favicon.ico" rel="shortcut icon"/>
+<title>9. Local Integration testing with KinD Digital Double - Starling Tutorial</title>
+<link href="../css/theme.css" rel="stylesheet"/>
+<link href="../css/theme_extra.css" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" rel="stylesheet"/>
+<script>
+        // Current page data
+        var mkdocs_page_name = "9. Local Integration testing with KinD Digital Double";
+        var mkdocs_page_input_path = "testing_with_kind.md";
+        var mkdocs_page_url = null;
+      </script>
+<script defer="" src="../js/jquery-3.6.0.min.js"></script>
+<!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+</head>
+<body class="wy-body-for-nav" role="document">
+<div class="wy-grid-for-nav">
+<nav class="wy-nav-side stickynav" data-toggle="wy-nav-shift">
+<div class="wy-side-scroll">
+<div class="wy-side-nav-search">
+<a class="icon icon-home" href=".."> Starling Tutorial
+        </a><div role="search">
+<form action="../search.html" class="wy-form" id="rtd-search-form" method="get">
+<input name="q" placeholder="Search docs" title="Type search term here" type="text"/>
+</form>
+</div>
+</div>
+<div aria-label="Navigation menu" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
+<p class="caption"><span class="caption-text">Tutorial</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getting_started/">1. Getting Started </a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../ros2_uav/">2. ROS2 and UAV Control</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../docker/">3. Docker and Containerisation</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../creating/">4. Creating your own Starling project</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../simulation/">5. Simulation and the Digital Double</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../cpp_example_dev/">6. Developing the example controller with ROS2 in CPP</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../testing_with_docker_compose/">7. Local testing with Docker-Compose</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../multiuav_kubernetes/">8. Multi-UAV flight with Kubernetes for container deployment</a>
+</li>
+<li class="toctree-l1 current"><a class="reference internal current" href="./">9. Local Integration testing with KinD Digital Double</a>
+<ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="#specifying-your-deployments">9.1 Specifying your Deployments</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#deploying-your-controller-to-kind">9.2 Deploying your controller to KinD</a>
+<ul>
+<li class="toctree-l3"><a class="reference internal" href="#starting-the-kind-stack">9.2.1 Starting the KinD stack</a>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#deploying-your-controller">9.2.2 Deploying your controller</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#developing-with-the-multi-uav-testing-stack">9.3 Developing with the Multi-UAV Testing Stack</a>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#next-steps">9.4 Next Steps</a>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../brl_flight/">10. Flying your controllers in the Flying Arena</a>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../next_steps/">11. Wrapping up and next steps</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+<section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+<nav aria-label="Mobile navigation menu" class="wy-nav-top" role="navigation">
+<i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+<a href="..">Starling Tutorial</a>
+</nav>
+<div class="wy-nav-content">
+<div class="rst-content"><div aria-label="breadcrumbs navigation" role="navigation">
+<ul class="wy-breadcrumbs">
+<li><a alt="Docs" class="icon icon-home" href=".."></a> »</li>
+<li>Tutorial »</li><li>9. Local Integration testing with KinD Digital Double</li>
+<li class="wy-breadcrumbs-aside">
+<a class="icon icon-github" href="https://github.com/StarlingUAS/starling_controller_templates/edit/master/docs/testing_with_kind.md"> Edit on GitHub</a>
+</li>
+</ul>
+<hr/>
+</div>
+<div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+<div class="section" itemprop="articleBody">
+<h1 id="local-integration-testing-with-kind-digital-double"><span class="enumerate-headings-plugin enumerate-heading-plugin">9.</span> Local Integration testing with KinD Digital Double<a class="headerlink" href="#local-integration-testing-with-kind-digital-double" title="Permanent link">¶</a></h1>
+<p>In this tutorial, you will finally be flying your controller against multiple vehicles within the Starling Integration Test Stack using KinD. By the end, you will understand how to develop and test against our stack, ready for flying on real vehicles.</p>
+<div class="toc">
+<ul>
+<li><a href="#local-integration-testing-with-kind-digital-double">9. Local Integration testing with KinD Digital Double</a><ul>
+<li><a href="#specifying-your-deployments">9.1 Specifying your Deployments</a></li>
+<li><a href="#deploying-your-controller-to-kind">9.2 Deploying your controller to KinD</a><ul>
+<li><a href="#starting-the-kind-stack">9.2.1 Starting the KinD stack</a></li>
+<li><a href="#deploying-your-controller">9.2.2 Deploying your controller</a></li>
+</ul>
+</li>
+<li><a href="#developing-with-the-multi-uav-testing-stack">9.3 Developing with the Multi-UAV Testing Stack</a></li>
+<li><a href="#next-steps">9.4 Next Steps</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<h2 id="specifying-your-deployments"><span class="enumerate-headings-plugin enumerate-heading-plugin">9.1</span> Specifying your Deployments<a class="headerlink" href="#specifying-your-deployments" title="Permanent link">¶</a></h2>
+<p>In your Starling application deployment folder, you should also see a <code>kubernetes.yaml</code> file. This file contains the instructions to tell Kubernetes which containers should be deployed to which places. It should be automatically generated to point to your project, so the image names here will be different to yours.</p>
+<p>There are two configurations listed, one for the Onboard Controller, and one for the Offboard central controller, seperated by the <code>---</code>. Breaking both down together briefly:</p>
+<pre><code class="language-yaml"># Onboard controllers
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+    ...
+---
+# Central monitor
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    ...
+</code></pre>
+<p>In Starling we primarily make use of two types of deployment: the <strong>Deployment</strong> and the <strong>Daemonset</strong>. In general we use a deployment when we want a container to be deployed to a specific place, in our case the deployment of your applications offboard component into the central server. The Daemonset on the other hand is used for deploying something to any node which matches a given label, in our case, any drone on the network.</p>
+<pre><code class="language-yaml"># Onboard Controllers
+      nodeSelector:
+        # starling.dev/vehicle-class: rotary
+        starling.dev/type: vehicle
+
+      tolerations:
+      - key: "starling.dev/type"
+        operator: "Equal"
+        value: "vehicle"
+        effect: "NoSchedule"
+---
+# Central monitor
+      nodeSelector:
+        name: master
+
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+        effect: NoSchedule
+</code></pre>
+<p>A bit further down on each you will see the nodeSelector and tolerations. All we'll say about these is that they enable us to choose where the containers are deployed. So the onboard controller is deployed to any node with the <code>starling.dev/type: vehicle</code> label, and similarly with the <code>name: master</code> label for the central monitor.</p>
+<pre><code class="language-yaml"># Onboard Controllers
+      containers:
+      - name: onboard-controller
+        image: starling123/starling-controller
+        imagePullPolicy: Always
+        volumeMounts:
+            ...
+---
+# Central Monitor
+      containers:
+      - name: offboard-controller
+        image: starling123/starling-controller
+        imagePullPolicy: Always
+        env:
+          - name: OFFBOARD
+            value: "true"
+      - name: starling-ui
+        image: uobflightlabstarling/starling-ui-example:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+      - name: rosbridge-suite
+        image: uobflightlabstarling/rosbridge-suite:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9090
+</code></pre>
+<p>Here we list the container or containers that each each deployment is actually deploying. For the onboard controller, we specify the image that we have built as part of this starling project. For the offboard controller, we also specify our image, but we also add the UI into our deployment. This implies that our kubernetes Pod contains 3 images which is absolutely fine - its a good way to group together functionality. Here we want all 3 containers to be run on the central monitor, so we may as well group them. Here we also specify the ports</p>
+<blockquote>
+<p><em>Note:</em> <code>imagePullPolicy</code> dictates if an image should be updated from the repository. <code>Always</code> means that on startup it will always pull the latest image to run. This is needed for local development in order to ensure you are running the latest controller. Optionally, <code>imagePullPolicy</code> can be set to <code>IfNotPresent</code> for the UI and rosbridge as they need only be pulled once.</p>
+<p><em>Note:</em> see also that the onboard controller also <code>volumeMounts</code> the file <code>/etc/starling/vehicle.config</code>. This is a special file which containers running onboard a drone read to identify who they are and other useful individual information. This file exists on every drone and containers are given access to it by mounting the file into the container when running. This is part of the Starling architecture.</p>
+</blockquote>
+<h2 id="deploying-your-controller-to-kind"><span class="enumerate-headings-plugin enumerate-heading-plugin">9.2</span> Deploying your controller to KinD<a class="headerlink" href="#deploying-your-controller-to-kind" title="Permanent link">¶</a></h2>
+<h3 id="starting-the-kind-stack"><span class="enumerate-headings-plugin enumerate-heading-plugin">9.2.1</span> Starting the KinD stack<a class="headerlink" href="#starting-the-kind-stack" title="Permanent link">¶</a></h3>
+<p>First things first, we need to start up the testing stack. For more details, see the <a href="../multiuav_kubernetes/">previous tutorial</a>. Let's start it up with two drones within the BRL environment.</p>
+<pre><code class="language-bash"># Start the kind stack
+starling start kind -n 2
+# Start the dashboard for visualisation. Remember to grab the key and go to https://localhost:31771
+starling start dashboard
+# Load the images into KinD and start the simulator
+starling simulator start --brl --load
+</code></pre>
+<p>As usual once everything is loaded, you should be able to see the simulator on <a href="https://localhost:8080"><code>https://localhost:8080</code></a>.</p>
+<blockquote>
+<p><em>Note:</em> If the simulator doesn't look like it's starting within 3 or 4 minutes, you can try and restart it by using <code>restart</code> instead of <code>start</code>.</p>
+</blockquote>
+<h3 id="deploying-your-controller"><span class="enumerate-headings-plugin enumerate-heading-plugin">9.2.2</span> Deploying your controller<a class="headerlink" href="#deploying-your-controller" title="Permanent link">¶</a></h3>
+<p>First, ensure that you have built your controller container. Do so by running the following from the root directory:</p>
+<pre><code class="language-bash">make
+</code></pre>
+<p>Also ensure that the default deployment file has been set up correctly and uses your image.</p>
+<p>Then we can start, load and deploy your controller into the testing stack with the following command:</p>
+<pre><code class="language-bash">starling deploy -f deployment/kubernetes.yaml --load start
+</code></pre>
+<p>It may take a minute to load, but once it's done, you should see your new deployments on the Kubernetes dashboard.</p>
+<p><img alt="deployments_on_kube_dash" src="../imgs/testing_kind/dashboard.png"/></p>
+<p>Going to the <code>pods</code> tab, you should see 3 new deployments - 2 onboard deployments, one to each drone, and 1 offboard deployment on the central node. Looking at the <em>Node</em> column, it should show that the two onboard deployments are on different KinD worker nodes. Let's check on the status of these controllers by looking at their logs. Click into one of the containers and press the <code>View logs</code> button in the top right.</p>
+<p><img alt="deploy_logs" src="../imgs/testing_kind/dash_view_logs.png"/></p>
+<p><img alt="viewing_logs" src="../imgs/testing_kind/dash_viewing_logs.png"/></p>
+<p>It looks like the controller is ready and just waiting for start button to be pressed, so let's do it!</p>
+<p><img alt="crash_drones" src="../imgs/testing_kind/2_vehicles_initial_crash.gif"/></p>
+<p>Oh no! Looks like the vehicles just go straight into each other and crash in a very ugly way. In the real world, this would have ended up with 2 broken drones in need of repair. These are the exact situations that integration testing is meant to catch.</p>
+<blockquote>
+<p><em>Note:</em> Try and guess why they crashed, and see if you can figure out a method of solving it before we continue.</p>
+</blockquote>
+<h2 id="developing-with-the-multi-uav-testing-stack"><span class="enumerate-headings-plugin enumerate-heading-plugin">9.3</span> Developing with the Multi-UAV Testing Stack<a class="headerlink" href="#developing-with-the-multi-uav-testing-stack" title="Permanent link">¶</a></h2>
+<p>In a similar vein to testing Docker-Compose, how do we make changes and develop against the KinD simulator? Again, the simulator or the cluster itself need not be restarted. Only the specific deployments related to your controller have to be updated.</p>
+<p>There are 3 steps involved:</p>
+<ol>
+<li>Rebuilding your container locally using <code>make</code>.</li>
+<li>Loading the updated image to the local repository so KinD has access to it.</li>
+<li>Restarting the deployment.</li>
+</ol>
+<p>This can be achieved in the following line:</p>
+<pre><code class="language-bash">make &amp;&amp; starling deploy -f deployment/kubernetes.yaml --load restart
+</code></pre>
+<p>For the crash scenario above, this was caused by the automated numbering of the drones and how they need to move through each other to get to their assigned start locations.</p>
+<p>A simple solution is to add a 90 degree offset to theta, so the entire circle is rotated by 90 degrees.</p>
+<pre><code class="language-cpp">// In controller.hpp around line 71, I added
+const double theta_offset = M_PI/2.0;
+///
+// In controller.cpp line 100 inside handleNotifyVehicles(..), I added that constant to this line
+// Used to be: double start_target_theta = 2 * M_PI * s-&gt;vehicle_id / s-&gt;total_vehicles;
+double start_target_theta = this-&gt;theta_offset +  (2 * M_PI * s-&gt;vehicle_id / s-&gt;total_vehicles);
+</code></pre>
+<p>Then we run the below command to rebuild and redeploy:</p>
+<pre><code class="language-bash">make &amp;&amp; starling deploy -f deployment/kubernetes.yaml --load restart
+</code></pre>
+<p>Check again to make sure the controllers have restarted (check that the created time is small). Then try pressing <code>Go</code> again!</p>
+<p><img alt="success" src="../imgs/testing_kind/2_vehicles_success.gif"/></p>
+<h2 id="next-steps"><span class="enumerate-headings-plugin enumerate-heading-plugin">9.4</span> Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">¶</a></h2>
+<p><strong>Congrats!</strong> 🎉🎉🎉 You now have your very own Starling application controller running within the KinD Multi-UAV Integration Testing Stack. This is literally as close as you can get from a systems perspective to flying real drones in the flight arena. If it works here, the only thing left to contend with is the differences between simulated and real vehicle flight (this is obviously a massively difficult problem, but thankfully many cleverer people are working on that...).</p>
+<p>You should now have an idea of how to develop and test multi-UAV applications within the integration test framework, and how to deploy your own applications to it.</p>
+<p>Feel free to further develop your applications! Maybe make them do something even more interesting than flying around in a circle (hahaha).</p>
+<p>The final step to the Starling worflow is then to take your controller and deploy it into the real world!</p>
+</div>
+</div><footer>
+<div aria-label="Footer Navigation" class="rst-footer-buttons" role="navigation">
+<a class="btn btn-neutral float-left" href="../multiuav_kubernetes/" title="8. Multi-UAV flight with Kubernetes for container deployment"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+<a class="btn btn-neutral float-right" href="../brl_flight/" title="10. Flying your controllers in the Flying Arena">Next <span class="icon icon-circle-arrow-right"></span></a>
+</div>
+<hr/>
+<div role="contentinfo">
+<!-- Copyright etc -->
+<p>Copyright © 2022 University of Bristol Flight Laboratory</p>
+</div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+</div>
+</div>
+</section>
+</div>
+<div aria-label="Versions" class="rst-versions" role="note">
+<span class="rst-current-version" data-toggle="rst-current-version">
+<span>
+<a class="fa fa-github" href="https://github.com/StarlingUAS/starling_controller_templates/" style="color: #fcfcfc"> GitHub</a>
+</span>
+<span><a href="../multiuav_kubernetes/" style="color: #fcfcfc">« Previous</a></span>
+<span><a href="../brl_flight/" style="color: #fcfcfc">Next »</a></span>
+</span>
+</div>
+<script>var base_url = '..';</script>
+<script defer="" src="../js/theme_extra.js"></script>
+<script defer="" src="../js/theme.js"></script>
+<script defer="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script defer="" src="../search/main.js"></script>
+<script defer="">
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+</body>
+</html>
