@@ -10,7 +10,7 @@ This repository is used within the tutorial: [https://starlinguas.github.io/star
 
 For more detailed explanation of usage, please go to [section 4 of the tutorial](https://starlinguas.github.io/starling_controller_templates/creating/)
 
-## Prerequisits
+## Prerequisites
 
 ### Install cookiecutter
 The template generation uses the [`cookiecutter`](https://cookiecutter.readthedocs.io/en/stable/README.html) tool for generating custom projects from a template.
@@ -27,7 +27,7 @@ This will give you access to the `cookiecutter` command line interface.
 
 ### Install Starling Dependencies
 
-Other than that you will need the prerequisits for Starling
+Other than that you will need the Prerequisites for Starling
 
 ### Sign up for Docker Hub and Github
 
@@ -99,19 +99,21 @@ The generated project has no functionality right now. This repository contains o
 
 These nodes can be added to your project using the following cookiecutter commands. Note that the packages should be generated into the `starling_project_name` directory of the base Starling project. Each of these commands are single line commands.
 
+Navigate into `<your project name>/<your project name>` e.g. `starling_controller/starling_controller` and run the following
+
 ```sh
 # CPP Onboard
-cookiecutter https://github.com/StarlingUAS/starling_controller_templates.git --directory cpp_ros2_node_onboard_template -o starling_controller/starling_controller
+cookiecutter https://github.com/StarlingUAS/starling_controller_templates.git --directory cpp_ros2_node_onboard_template 
 ```
 
 ```sh
 # Python Offboard
-cookiecutter https://github.com/StarlingUAS/starling_controller_templates.git --directory python_ros2_node_offboard_template -o starling_controller/starling_controller
+cookiecutter https://github.com/StarlingUAS/starling_controller_templates.git --directory python_ros2_node_offboard_template
 ```
 
 ```sh
 # Messages
-cookiecutter https://github.com/StarlingUAS/starling_controller_templates.git --directory ros2_msgs_template -o starling_controller/starling_controller
+cookiecutter https://github.com/StarlingUAS/starling_controller_templates.git --directory ros2_msgs_template 
 ```
 
 Similar to the generating of the base project, these will ask a number of questions to you during the generation. In particular it will ask what the `package_name` is which will become the name of that particular node package.

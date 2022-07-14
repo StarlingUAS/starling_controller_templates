@@ -120,21 +120,22 @@ The generated project has no functionality right now. This repository contains o
 
 These nodes can be added to your project using the following `cookiecutter` commands. Note that the packages should be generated in the `starling_project_name` directory of the base Starling project. Each of these commands are single line commands.
 
+Navigate into `<your project name>/<your project name>` e.g. `starling_controller/starling_controller` (by default this should only contain the file `run.sh` and run the following)
+
 ```sh
 # CPP Onboard
-cookiecutter https://github.com/StarlingUAS/starling_controller_templates.git --directory cpp_ros2_node_onboard_template -o starling_controller/starling_controller
+cookiecutter https://github.com/StarlingUAS/starling_controller_templates.git --directory cpp_ros2_node_onboard_template 
 ```
 
 ```sh
 # Python Offboard
-cookiecutter https://github.com/StarlingUAS/starling_controller_templates.git --directory python_ros2_node_offboard_template -o starling_controller/starling_controller
+cookiecutter https://github.com/StarlingUAS/starling_controller_templates.git --directory python_ros2_node_offboard_template
 ```
 
 ```sh
 # Messages
-cookiecutter https://github.com/StarlingUAS/starling_controller_templates.git --directory ros2_msgs_template -o starling_controller/starling_controller
+cookiecutter https://github.com/StarlingUAS/starling_controller_templates.git --directory ros2_msgs_template 
 ```
-
 > *Note* the `--directory` argument points `cookiecutter` to the correct template; the `-o` argument specifies the output directory, which in our case should be inside the created Starling project.
 
 Similar to the base project generation, these commands will ask you a number of questions during the generation. Most importantly, it will ask what the `package_name` is which will become the name of that particular node package.

@@ -47,15 +47,15 @@ This will place you into a space where the exact measurements match the real wor
 ```
 _________________________________
 |                                |
-|                                |
-|                                |
-|_                              L|
-|C|
+|                ^               |
+|                |x              |
+|_            <--                |
+|_|            y                 
 |  |                             |
 |__|____________                 |
-|___|_V_|___|___|                |
+|___|___|___|___|                |
 |                     _____ _____|
-|_    _____    ______|__E__|_____|
+|_    _____    ______|_____|_____|
 ```
 
 ![flightarena](imgs/docker/flightarena.png)

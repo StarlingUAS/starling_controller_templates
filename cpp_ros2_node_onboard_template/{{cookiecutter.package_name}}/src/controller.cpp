@@ -51,7 +51,7 @@ bool UserController::smExecute(const rclcpp::Time& stamp, const rclcpp::Duration
     double time_elapsed_sec = time_elapsed.seconds();
 
     // Current Vehicle Location
-    geometry_msgs::msg::PoseStamped current_pos = this->node->vehicle_local_position;
+    std::shared_ptr<geometry_msgs::msg::PoseStamped> current_pos = this->node->vehicle_local_position;
 
     /*
      *

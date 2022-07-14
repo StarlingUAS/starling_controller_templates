@@ -63,6 +63,14 @@ Crucially, the user interface between K8s on KinD is identical to that on the re
 
 > Prerequisites: [Getting Started](getting_started.md)
 
+### Installing KinD
+
+If you have got this far, you will also need to install the `kind` utility. This can be done through the starling CLI:
+
+```
+starling install kind
+```
+
 ### Running the Multi-Drone Cluster
 
 Start a cluster of 2 drones by running the following:
@@ -74,6 +82,8 @@ starling start kind -n 2
 Once the cluster has started, we can start the general UAV simulator.
 
 > **IMPORTANT**: The simulator can potentially be resource heavy to run, w.r.t both CPU usage and RAM. Before going further, please ensure you have enough space on your primary drive (at least 30Gb to be safe - check your C drive on Windows). This is especially important if running multiple vehicles. We do not recommend you run more than 6 vehicles at a time.
+
+> **IMPORTANT**: On windows machines running WSL2, it has been noted that machines with 16GB RAM can potentially slow down or run out of memory. This is due to WSL2 taking up slightly too much memory. It is recommended that you reduce the amount of memory from 8Gb to 6 or 7Gb. In particular by modifying your `.wslconfig` file. See [this guide](https://itnext.io/wsl2-tips-limit-cpu-memory-when-using-docker-c022535faf6f)
 
 First, we should load or download the required simulation containers locally. We need to run the `load` command as we want to load the local container images into the KinD container. This saves the KinD containers from having to download the containers themselves during runtime. This is achieved by starting a local container registry (just like Docker Hub), loading our containers into there, and getting the KinD containers to look there first when looking for containers.
 
